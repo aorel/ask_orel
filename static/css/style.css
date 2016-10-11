@@ -1,0 +1,96 @@
+.askme-logo{
+    height: 40px;
+    margin-top: -10px;
+}
+.askme-logo a{
+    color: #fff;
+}
+.askme-logo a:hover {
+    color: #aaa;
+}
+.askme-nav-avatar {
+    width: 40px;
+    height: 40px;
+    margin-top: -10px;
+}
+.askme-panel {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.question {
+    margin-bottom: 50px;
+}
+
+.question-avatar {
+    width: 80px;
+    height: 80px
+}
+
+.question-body {
+    margin-top: 0.5em;
+    padding-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.answer {
+    margin-top: 50px;
+}
+
+.answer-body {
+    background-color: #fff;
+    /*margin-top: 0.5em;
+    padding-top: 0.5em;*/
+    margin-bottom: 0.5em;
+}
+
+.askme-meta {
+    color: #999;
+    padding-top: .5em;
+}
+
+.askme-textarea{
+    max-width: 100%;
+}
+
+.question-like, .question-dislike {
+    color: #aaa;
+}
+.question-like:hover, .question-dislike:hover {
+    color: #777;
+}
+
+.askme-tags {
+    padding-bottom: 5px;
+}
+
+
+.askme-badge{
+  background-color: #ccc;
+}
+.askme-badge:hover{
+  background-color: #999;
+}
+.askme-label{
+  background-color: #ccc;
+}
+.askme-label:hover{
+  background-color: #999;
+}
+
+.askme-pagination {
+    color: #aaa;
+}
+
+.askme-tags a {
+}
+
+.askme-tags a:hover {
+    text-decoration: none;
+}
+
+
+.form-group img{
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+}
