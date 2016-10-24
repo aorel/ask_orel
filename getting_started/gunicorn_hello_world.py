@@ -1,8 +1,3 @@
-#gunicorn --config=getting_started/gunicorn_config.py ask_orel.wsgi
-
-#gunicorn --config=gunicorn_config.py gunicorn_hello_world:app
-#http://127.0.0.1:8081/lol.html?a=5&b=1
-
 def app(environ, start_response):
     print(environ['HTTP_HOST'] + environ['RAW_URI'])
 
