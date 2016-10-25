@@ -1,15 +1,17 @@
-def app(environ, start_response):
-    print(environ['HTTP_HOST'] + environ['RAW_URI'])
+def application(environ, start_response):
+    #print(environ['HTTP_HOST'] + environ['RAW_URI'])
 
+    path_info = environ['PATH_INFO']
     request_method = environ['REQUEST_METHOD']
-    raw_uri = environ['RAW_URI']
+    query_string = environ['QUERY_STRING']
 
     data = 'Hello, world!\n'\
-    + request_method + ' ' + raw_uri + '\n'
+    + path_info + '\n'\
+    + request_method + ' ' + query_string + '\n'
 
     status = '200 OK'
     response_headers = [
-        ('Content-type','text/plain'),
+        ('Content-Type','text/plain'),
         ('Content-Length', str(len(data)))
     ]
     start_response(status, response_headers)
