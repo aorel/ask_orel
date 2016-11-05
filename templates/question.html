@@ -1,0 +1,89 @@
+{% extends "base_right_column.html" %}
+
+{% block title %}Question{% endblock %}
+
+{% block content %}
+
+<div class="question">
+    <div class="media">
+        <div class="media-left">
+            <img src="/static/img/batman.jpg" class="media-object img-thumbnail question-avatar">
+        </div>
+        <div class="media-body">
+            <a href="/question/{{ question.id }}"><h4 class="media-heading">{{ question.heading }}</h4></a>
+            <div class="question-body">
+                {{ question.body }}
+            </div>
+            <div class="askme-meta">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>December {{ question.meta.date }}, 2016 by <a href="#">{{ question.meta.user }}</a>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <a href="/question/{{ question.id }}">Answers <span class="badge askme-badge">{{ question.meta.answers }}</span></a> |
+                        <a href="/question/{{ question.id }}">Rank <span class="badge askme-badge">{{ question.meta.rank }}</span></a>
+                        <button type="button" class="btn btn-default btn-xs question-like">
+                                <span class="glyphicon glyphicon-triangle-top" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-default btn-xs question-dislike">
+                                <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="askme-tags text-right">
+                {% for tag in question.tags %}
+                    <a href="/tag/{{ tag }}"><span class="label label-default askme-label">{{ tag }}</span></a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% for answer in question.answers %}
+<div class="answer">
+    <div class="media">
+        <div class="media-left">
+            <img src="/static/img/batman.jpg" class="media-object img-thumbnail question-avatar">
+        </div>
+        <div class="media-body">
+            <div class="answer-body">
+                {{ answer.body }}
+            </div>
+            <div class="askme-meta">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>December {{ answer.meta.date }}, 2013 by <a href="#">{{ answer.meta.user }}</a>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <a href="#">Rank <span class="badge askme-badge">{{ answer.meta.rank }}</span></a>
+                        <button type="button" class="btn btn-default btn-xs question-like">
+                            <span class="glyphicon glyphicon-triangle-top" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-default btn-xs question-dislike">
+                            <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<div class="panel panel-default answer">
+    <div class="panel-body">
+        <form class="form-horizontal">
+            <label for="basic-url">Type your answer:</label>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <textarea class="form-control askme-textarea" rows="5" id="answer" placeholder ="enter text" maxlength="512"></textarea>
+                </div>
+            </div>
+            <div class="alert alert-danger" role="alert">Sorry, text area is empty!</div>
+            <button type="submit" class="btn btn-default">Answer</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

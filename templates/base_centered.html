@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}{% endblock %}
+
+{% block base_extension %}
+
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        {% block content %}{% endblock %}
+    </div>
+    <div class="col-md-2"></div>
+</div>
+
+{% endblock %}
