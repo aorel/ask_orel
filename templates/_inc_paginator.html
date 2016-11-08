@@ -1,21 +1,21 @@
 <div class="text-center">
     <ul class="pagination pagination-centered askme-pagination">
         {% if page.has_previous %}
-            <li><a href="{% url 'questions' %}{{ page.previous_page_number }}">&laquo;</a></li>
+            <li><a href="{{ url }}{{ page.previous_page_number }}">&laquo;</a></li>
         {% else %}
             <li class="disabled"><span>&laquo;</span></li>
         {% endif %}
 
         {% for page_number in page.paginator.page_range %}
             {% ifequal page_number page.number %}
-                <li class="active"><a href="{% url 'questions' %}{{ page_number }}">{{ page_number }}</a></li>
+                <li class="active"><a href="{{ url }}{{ page_number }}">{{ page_number }}</a></li>
             {% else %}
-                <li><a href="{% url 'questions' %}{{ page_number }}">{{ page_number }}</a></li>
+                <li><a href="{{ url }}{{ page_number }}">{{ page_number }}</a></li>
             {% endifequal %}
         {% endfor %}
 
         {% if page.has_next %}
-            <li><a href="{% url 'questions' %}{{ page.next_page_number }}">&raquo;</a></li>
+            <li><a href="{{ url }}{{ page.next_page_number }}">&raquo;</a></li>
         {% else %}
             <li class="disabled"><span>&raquo;</span></li>
         {% endif %}

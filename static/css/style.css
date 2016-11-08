@@ -13,9 +13,6 @@
     height: 40px;
     margin-top: -10px;
 }
-.askme-panel {
-    margin-bottom: 50px;
-}
 
 .question {
     margin-bottom: 50px;
@@ -34,25 +31,34 @@
 
 .answer {
     margin-top: 50px;
+    margin-bottom: 50px;
+    /*border-style: solid;
+    border-color: red;*/
 }
 
 .answer-body {
     margin-bottom: 0.5em;
 }
 
+.answer-panel {
+    /*margin-bottom: 50px;*/
+    padding-top: 0px;
+}
+
+
 .askme-meta {
     color: #999;
     padding-top: .5em;
 }
 
-.askme-textarea{
+.askme-textarea {
     max-width: 100%;
 }
 
-.question-like, .question-dislike {
+.askme-icon {
     color: #aaa;
 }
-.question-like:hover, .question-dislike:hover {
+.askme-icon:hover {
     color: #777;
 }
 
@@ -75,7 +81,8 @@
 }
 
 .askme-pagination {
-    color: #aaa;
+    /*color: #aaa;*/
+    margin-bottom: 50px;
 }
 
 .askme-tags a {

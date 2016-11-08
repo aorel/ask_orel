@@ -47,7 +47,14 @@
                                     <div class="form-group">
                                         <input type="text" class="form-control" placeholder="Search">
                                     </div>
-                                    <a href="{% url 'ask' %}" class="btn btn-default">Ask!</a>
+                                    <a href="{% url 'ask' %}" class="btn btn-default">
+                                        <span class="glyphicon glyphicon glyphicon-question-sign askme-icon" aria-hidden="true"></span>
+                                        Ask
+                                    </a>
+                                    <a href="{% url 'hot' %}" class="btn btn-default">
+                                        <span class="glyphicon glyphicon glyphicon-fire askme-icon" aria-hidden="true"></span>
+                                        Hot
+                                    </a>
                                 </form>
 
 

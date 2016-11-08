@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 
 from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.urls import reverse
 
 import datetime
 import random
@@ -22,6 +23,8 @@ def hello_world(request):
 
 def test(request):
     return render(request, 'test.html')
+
+
 
 
 
@@ -45,7 +48,7 @@ for i in range(1, 51):
     for j in range(1, 3):
         one_question_answer = {}
         one_question_answer['id'] = '{0}_{1}'.format(i,j)
-        one_question_answer['body'] = "@{0} It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.".format(j)
+        one_question_answer['body'] = "#{0} @{0} It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.".format(i,j)
         one_question_answer['meta'] = {
             'user': 'user{0}'.format(j),
             'date': '{0}'.format(random.randint(1, 30)),
@@ -65,7 +68,7 @@ for i in range(1, 51):
     questions_list.append(one_question)
 
 def my_paginator(objects_list, page, objects_per_page=10):
-    paginator = Paginator(questions_list, objects_per_page)
+    paginator = Paginator(objects_list, objects_per_page)
     try:
         objects_on_page = paginator.page(page)
     except PageNotAnInteger:
@@ -79,14 +82,17 @@ def my_question_search(q_id):
 
 
 
-def hot(request):
-    data = '<p>hot</p>'
-    return HttpResponse(data)
 
-def tag(request, tag_name):
-    #data = '<p>tag: ' + str(tag_name) + '</p>'
-    #return HttpResponse(data)
+
+def hot(request, page=1):
+    context['url'] = reverse('hot')
+    context['page'] = my_paginator(questions_list[:25], page)#questions_list[:5]
+    return render(request, 'hot.html', context)
+
+def tag(request, tag_name, page=1):
     context['tag_name'] = tag_name
+    context['url'] = reverse('tag', kwargs={'tag_name': tag_name})
+    context['page'] = my_paginator([], page)
     return render(request, 'tag.html', context)
 
 def question(request, question_id):
@@ -97,14 +103,9 @@ def question(request, question_id):
     else:
         return redirect(questions)
 
-    #return render(request, 'question.html', context)
-
-def questions(request, questions_page=1):
-    #context['questions'] = questions_list
-
-    #p = Paginator(questions_list, 5)
-    #context['questions'] = p.page(1)
-    context['page'] = my_paginator(questions_list, questions_page)
+def questions(request, page=1):
+    context['url'] = reverse('questions')
+    context['page'] = my_paginator(questions_list, page)
     return render(request, 'questions.html', context)
 
 def login(request):
@@ -115,4 +116,3 @@ def signup(request):
 
 def ask(request):
     return render(request, 'ask.html', context)
-

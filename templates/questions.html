@@ -1,44 +1,13 @@
-{% extends "base_right_column.html" %}
+{% extends "_ext_base_right_column.html" %}
 
 {% block title %}Home{% endblock %}
 
 {% block content %}
 
 {% for question in page %}
-<div class="question">
-    <div class="media">
-        <div class="media-left">
-            <img src="/static/img/batman.jpg" class="media-object img-thumbnail question-avatar">
-        </div>
-        <div class="media-body">
-            <a href="/question/{{ question.id }}"><h4 class="media-heading">{{ question.heading }}</h4></a>
-            <div class="askme-meta">
-                <div class="row">
-                    <div class="col-md-6">
-                        <p>December {{ question.meta.date }}, 2016 by <a href="#">{{ question.meta.user }}</a>
-                    </div>
-                    <div class="col-md-6 text-right">
-                        <a href="/question/{{ question.id }}">Answers <span class="badge askme-badge">{{ question.meta.answers }}</span></a> |
-                        <a href="/question/{{ question.id }}">Rank <span class="badge askme-badge">{{ question.meta.rank }}</span></a>
-                        <button type="button" class="btn btn-default btn-xs question-like">
-                                <span class="glyphicon glyphicon-triangle-top" aria-hidden="true"></span>
-                        </button>
-                        <button type="button" class="btn btn-default btn-xs question-dislike">
-                                <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="askme-tags text-right">
-                {% for tag in question.tags %}
-                    <a href="/tag/{{ tag }}"><span class="label label-default askme-label">{{ tag }}</span></a>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-</div>
+    {% include "_inc_question.html" %}
 {% endfor %}
 
-{% include "paginator.html" %}
+{% include "_inc_paginator.html" %}
 
 {% endblock %}
