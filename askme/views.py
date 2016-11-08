@@ -48,7 +48,7 @@ for i in range(1, 51):
     for j in range(1, 3):
         one_question_answer = {}
         one_question_answer['id'] = '{0}_{1}'.format(i,j)
-        one_question_answer['body'] = "#{0} @{0} It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.".format(i,j)
+        one_question_answer['body'] = "#{0} @{1} It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.".format(i,j)
         one_question_answer['meta'] = {
             'user': 'user{0}'.format(j),
             'date': '{0}'.format(random.randint(1, 30)),
@@ -85,14 +85,12 @@ def my_question_search(q_id):
 
 
 def hot(request, page=1):
-    context['url'] = reverse('hot')
-    context['page'] = my_paginator(questions_list[:25], page)#questions_list[:5]
+    context['page'] = my_paginator(questions_list[:25], page)
     return render(request, 'hot.html', context)
 
 def tag(request, tag_name, page=1):
     context['tag_name'] = tag_name
-    context['url'] = reverse('tag', kwargs={'tag_name': tag_name})
-    context['page'] = my_paginator([], page)
+    context['page'] = my_paginator(questions_list[:15], page)
     return render(request, 'tag.html', context)
 
 def question(request, question_id):
@@ -104,7 +102,6 @@ def question(request, question_id):
         return redirect(questions)
 
 def questions(request, page=1):
-    context['url'] = reverse('questions')
     context['page'] = my_paginator(questions_list, page)
     return render(request, 'questions.html', context)
 

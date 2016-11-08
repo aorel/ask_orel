@@ -8,6 +8,7 @@
     {% include "_inc_question.html" %}
 {% endfor %}
 
-{% include "_inc_paginator.html" %}
+{% url 'questions' as questions_url %}
+{% include "_inc_paginator.html" with paginator_url=questions_url %}
 
 {% endblock %}

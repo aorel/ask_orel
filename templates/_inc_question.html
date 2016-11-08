@@ -5,6 +5,13 @@
         </div>
         <div class="media-body">
             <a href="/question/{{ question.id }}"><h4 class="media-heading">{{ question.heading }}</h4></a>
+
+            {% if show_body %}
+            <div class="question-body">
+                {{ question.body }}
+            </div>
+            {% endif %}
+
             <div class="askme-meta">
                 <div class="row">
                     <div class="col-md-6">

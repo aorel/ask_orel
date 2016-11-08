@@ -10,15 +10,15 @@ urlpatterns = [
 
 
     url(r'^hot/$', views.hot, name='hot'),
-    url(r'^hot/(?P<page>[0-9]+)/$', views.hot),
+    url(r'^hot/(?P<page>[0-9]+)/$', views.hot, name='hot_page'),
 
     url(r'^tag/(?P<tag_name>\w+)/$', views.tag, name='tag'),
-    url(r'^tag/(?P<tag_name>\w+)/(?P<page>[0-9]+)/$', views.tag),
+    url(r'^tag/(?P<tag_name>\w+)/(?P<page>[0-9]+)/$', views.tag, name='tag_page'),
 
-    url(r'^question/(?P<question_id>[0-9]+)/$', views.question),
+    url(r'^question/(?P<question_id>[0-9]+)/$', views.question, name='question'),
 
     url(r'^questions/$', views.questions, name='questions'),
-    url(r'^questions/(?P<page>[0-9]+)/$', views.questions),
+    url(r'^questions/(?P<page>[0-9]+)/$', views.questions,  name='questions_page'),
 
     url(r'^login/$', views.login, name='login'),
     url(r'^signup/$', views.signup, name='signup'),

@@ -16,7 +16,8 @@
         {% include "_inc_question.html" %}
     {% endfor %}
 
-    {% include "_inc_paginator.html" %}
+    {% url 'tag' as tag_url %}
+    {% include "_inc_paginator.html" with paginator_url=tag_url %}
 
 {% else %}
     <div class="alert alert-warning" role="alert">Sorry, there is nothing to show you.</div>
