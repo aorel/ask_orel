@@ -10,27 +10,25 @@
     </div>
 
     <div class="col-md-3">
-        <div class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-heading">Popular tags</div>
-                <div class="panel-body">
-                    {% for tag in popular_tags %}
-                        {% if forloop.last %}
-                            <a href="/tag/{{ tag }}">{{ tag }}</a>
-                        {% else %}
-                            <a href="/tag/{{ tag }}">{{ tag }}</a>,
-                        {% endif %}
-                    {% endfor %}
-                </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">Popular tags</div>
+            <div class="panel-body">
+                {% for tag in popular_tags %}
+                    {% if forloop.last %}
+                        <a href="/tag/{{ tag }}">{{ tag }}</a>
+                    {% else %}
+                        <a href="/tag/{{ tag }}">{{ tag }}</a>,
+                    {% endif %}
+                {% endfor %}
             </div>
+        </div>
 
-            <div class="panel panel-default">
-                <div class="panel-heading">Best members</div>
-                <div class="panel-body">
-                    <span>
-                        {{ best_members|join:", " }}
-                    </span>
-                </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">Best members</div>
+            <div class="panel-body">
+                <span>
+                    {{ best_members|join:", " }}
+                </span>
             </div>
         </div>
     </div>

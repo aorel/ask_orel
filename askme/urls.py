@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from . import views
+from askme import views
 
 urlpatterns = [
     url(r'^datetime/$', views.current_datetime),
@@ -9,8 +9,8 @@ urlpatterns = [
 
 
 
-    url(r'^hot/$', views.hot, name='hot'),
-    url(r'^hot/(?P<page>[0-9]+)/$', views.hot, name='hot_page'),
+    url(r'^best/$', views.best, name='best'),
+    url(r'^best/(?P<page>[0-9]+)/$', views.best, name='best_page'),
 
     url(r'^tag/(?P<tag_name>\w+)/$', views.tag, name='tag'),
     url(r'^tag/(?P<tag_name>\w+)/(?P<page>[0-9]+)/$', views.tag, name='tag_page'),

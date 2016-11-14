@@ -4,11 +4,17 @@
 
 {% block content %}
 
-{% for question in page %}
-    {% include "_inc_question.html" %}
-{% endfor %}
+{% if page %}
 
-{% url 'questions' as questions_url %}
-{% include "_inc_paginator.html" with paginator_url=questions_url %}
+    {% for question in page %}
+        {% include "_inc_question.html" %}
+    {% endfor %}
+
+    {% url 'questions' as questions_url %}
+    {% include "_inc_paginator.html" with paginator_url=questions_url %}
+
+{% else %}
+    {% include "_inc_empty.html" %}
+{% endif %}
 
 {% endblock %}

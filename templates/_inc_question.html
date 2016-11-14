@@ -4,22 +4,22 @@
             <img src="/static/img/batman.jpg" class="media-object img-thumbnail question-avatar">
         </div>
         <div class="media-body">
-            <a href="/question/{{ question.id }}"><h4 class="media-heading">{{ question.heading }}</h4></a>
+            <a href="/question/{{ question.id }}"><h4 class="media-heading">{{ question.title }}</h4></a>
 
             {% if show_body %}
             <div class="question-body">
-                {{ question.body }}
+                {{ question.text }}
             </div>
             {% endif %}
 
             <div class="askme-meta">
                 <div class="row">
                     <div class="col-md-6">
-                        <p>December {{ question.meta.date }}, 2016 by <a href="#">{{ question.meta.user }}</a>
+                        <p>{{ question.date }} <a href="#">{{ question.user }}</a>
                     </div>
                     <div class="col-md-6 text-right">
-                        <a href="/question/{{ question.id }}">Answers <span class="badge askme-badge">{{ question.meta.answers }}</span></a> |
-                        <a href="/question/{{ question.id }}">Rank <span class="badge askme-badge">{{ question.meta.rank }}</span></a>
+                        <a href="/question/{{ question.id }}">Answers <span class="badge askme-badge">{{ question.answer_set.all|length }}</span></a> |
+                        <a href="/question/{{ question.id }}">Votes <span class="badge askme-badge">{{ question.votes }}</span></a>
                         <button type="button" class="btn btn-default btn-xs">
                                 <span class="glyphicon glyphicon-triangle-top askme-icon" aria-hidden="true"></span>
                         </button>
@@ -30,7 +30,7 @@
                 </div>
             </div>
             <div class="askme-tags text-right">
-                {% for tag in question.tags %}
+                {% for tag in question.tags.all %}
                     <a href="/tag/{{ tag }}"><span class="label label-default askme-label">{{ tag }}</span></a>
                 {% endfor %}
             </div>

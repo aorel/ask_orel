@@ -1,0 +1,22 @@
+{% extends "_ext_base_right_column.html" %}
+
+{% block title %}Best{% endblock %}
+
+{% block content %}
+
+<div class="well well-sm">Best questions</div>
+
+{% if page %}
+
+    {% for question in page %}
+        {% include "_inc_question.html" %}
+    {% endfor %}
+
+    {% url 'best' as best_url %}
+    {% include "_inc_paginator.html" with paginator_url=best_url %}
+
+{% else %}
+    {% include "_inc_empty.html" %}
+{% endif %}
+
+{% endblock %}

@@ -6,7 +6,7 @@
 
 {% include "_inc_question.html" with show_body=True %}
 
-{% for answer in question.answers %}
+{% for answer in question.answer_set.all %}
 <div class="answer">
     <div class="media">
         <div class="media-left">
@@ -14,20 +14,20 @@
         </div>
         <div class="media-body">
             <div class="answer-body">
-                {{ answer.body }}
+                {{ answer.text }}
             </div>
             <div class="askme-meta">
                 <div class="row">
                     <div class="col-md-6">
-                        <p>December {{ answer.meta.date }}, 2013 by <a href="#">{{ answer.meta.user }}</a>
+                        <p>December {{ answer.date }} <a href="#">{{ answer.user }}</a>
                     </div>
                     <div class="col-md-6 text-right">
-                        <a href="#">Rank <span class="badge askme-badge">{{ answer.meta.rank }}</span></a>
-                        <button type="button" class="btn btn-default btn-xs question-like">
-                            <span class="glyphicon glyphicon-triangle-top" aria-hidden="true"></span>
+                        <a href="#">Rank <span class="badge askme-badge">{{ answer.votes }}</span></a>
+                        <button type="button" class="btn btn-default btn-xs">
+                            <span class="glyphicon glyphicon-triangle-top askme-icon" aria-hidden="true"></span>
                         </button>
-                        <button type="button" class="btn btn-default btn-xs question-dislike">
-                            <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
+                        <button type="button" class="btn btn-default btn-xs">
+                            <span class="glyphicon glyphicon-triangle-bottom askme-icon" aria-hidden="true"></span>
                         </button>
                     </div>
                 </div>
