@@ -1,0 +1,5 @@
+static/admin/* linguist-vendored
+static/css/bootstrap* linguist-vendored
+static/fonts/* linguist-vendored
+static/js/bootstrap* linguist-vendored
+static/js/npm linguist-vendored
