@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
 
@@ -90,7 +90,6 @@ def my_question_search(q_id):
 def best(request, page=1):
     best_questions = Question.objects.best()
     context['page'] = my_paginator(best_questions, page)
-
     return render(request, 'best.html', context)
 
 
@@ -102,12 +101,16 @@ def tag(request, tag_name, page=1):
 
 
 def question(request, question_id):
-    try:
-        question_by_id = Question.objects.get_by_id(question_id)
+    question_by_id = get_object_or_404(Question, pk=question_id)
+    context['question'] = question_by_id
+    return render(request, 'question.html', context)
+
+    '''try:
+        question_by_id = Question.objects.get(id=question_id)
         context['question'] = question_by_id
         return render(request, 'question.html', context)
     except Question.DoesNotExist:
-        raise Http404("No Question matches the given query.")
+        raise Http404("No Question matches the given query.")'''
 
 
 def questions(request, page=1):

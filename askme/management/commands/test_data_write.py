@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from askme.models import User, Profile, Tag, Question, Answer
+from askme.models import User, Profile, Tag, QuestionVote, Question, Answer, AnswerVote
 
 import random
 
@@ -20,24 +20,16 @@ for i in my_users:
 test_questions = []
 for i in range(1, 11):
     one_question = dict()
-    one_question['id'] = i
     one_question['title'] = '_Test question {0}'.format(i)
     one_question['text'] = "_{0} Lorem Ipsum  is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.".format(i)
 
     one_question_answers = list()
     for j in range(1, 3):
         one_question_answer = dict()
-        one_question_answer['id'] = '{0}_{1}'.format(i,j)
         one_question_answer['text'] = "_{0} @{1} It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.".format(i,j)
-        one_question_answer['date'] = '{0}'.format(random.randint(1, 30))
-        one_question_answer['votes'] = '{0}'.format(random.randint(1, 50))
-
         one_question_answers.append(one_question_answer)
     one_question['answers'] = one_question_answers
 
-    one_question['date'] = '{0}'.format(random.randint(1, 30))
-    one_question['votes'] = '{0}'.format(random.randint(1, 50))
-    one_question['tags'] = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5']
     test_questions.append(one_question)
 
 
@@ -73,7 +65,7 @@ class Command(BaseCommand):
                 )
                 profile.save()
 
-        print("write questions and answers...")
+        print("write questions, questions votes, answers, answers votes......")
         for test_question in test_questions:
             if Question.objects.filter(title=test_question.get('title')).exists():
                 pass
@@ -85,12 +77,23 @@ class Command(BaseCommand):
                     text=test_question.get('text'),
                     # data -> auto generated
                     user=random_question_user,
-                    votes=random.randint(1, 50),
-                    # tag=random.choice(test_tags),
                 )
                 question.save()
-                random_tag = random.choice(Tag.objects.filter(name__startswith='_'))
-                question.tags.add(random_tag)
+
+                for random_loop in range(1, random.randint(1, 5)):
+                    random_tag = random.choice(Tag.objects.filter(name__startswith='_'))
+                    question.tags.add(random_tag)
+
+                for random_loop in range(1, random.randint(2, 10)):
+                    random_answer_user = random.choice(User.objects.filter(username__startswith='_'))
+                    question_vote, created = QuestionVote.objects.get_or_create(
+                        question=question,
+                        user=random_answer_user,
+                    )
+                    # if created is True:
+                    #    print 'question vote added'
+                    # else:
+                    #    print 'question vote already exist'
 
                 for test_answer in test_question.get('answers'):
                     random_answer_user = random.choice(User.objects.filter(username__startswith='_'))
@@ -99,6 +102,17 @@ class Command(BaseCommand):
                         text=test_answer.get('text'),
                         # data -> auto generated
                         user=random_answer_user,
-                        votes=random.randint(1, 10),
                     )
                     answer.save()
+
+                    for random_loop in range(1, random.randint(2, 10)):
+                        random_answer_user = random.choice(User.objects.filter(username__startswith='_'))
+                        question_vote, created = AnswerVote.objects.get_or_create(
+                            answer=answer,
+                            user=random_answer_user,
+                        )
+                        # if created is True:
+                        #    print 'answer vote added'
+                        # else:
+                        #    print 'answer vote already exist'
+                # print ''

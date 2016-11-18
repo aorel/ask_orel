@@ -11,5 +11,5 @@ class Command(BaseCommand):
         User.objects.filter(username__startswith='_').delete()
         Profile.objects.filter(user__username__startswith='_').delete()
 
-        print("delete questions and answers...")
+        print("delete questions, questions votes, answers, answers votes...")
         Question.objects.filter(title__startswith='_').delete()

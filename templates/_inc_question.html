@@ -19,7 +19,12 @@
                     </div>
                     <div class="col-md-6 text-right">
                         <a href="/question/{{ question.id }}">Answers <span class="badge askme-badge">{{ question.answer_set.all|length }}</span></a> |
-                        <a href="/question/{{ question.id }}">Votes <span class="badge askme-badge">{{ question.votes }}</span></a>
+                        <a href="/question/{{ question.id }}">Votes <span class="badge askme-badge">{{ question.questionvote_set.all|length }}</span></a>
+                        <p>
+                            {% for questionvote in question.questionvote_set.all %}
+                                {{ questionvote.user }}
+                            {% endfor %}
+                        </p>
                         <button type="button" class="btn btn-default btn-xs">
                                 <span class="glyphicon glyphicon-triangle-top askme-icon" aria-hidden="true"></span>
                         </button>

@@ -26,9 +26,13 @@
         <div class="panel panel-default">
             <div class="panel-heading">Best members</div>
             <div class="panel-body">
-                <span>
-                    {{ best_members|join:", " }}
-                </span>
+                {% for members in best_members %}
+                    {% if forloop.last %}
+                        <a href="#">{{ members }}</a>
+                    {% else %}
+                        <a href="#">{{ members }}</a>,
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
     </div>

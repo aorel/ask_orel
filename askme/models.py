@@ -9,54 +9,11 @@ from django.utils import timezone
 
 from django.template.defaultfilters import truncatechars
 
-# Create your models here.
-
-'''
-class ArticleManager(models.Manager):
-    def published(self):
-        return self.filter(is_published=True)
-
-
-class Article(models.Model):
-    title = models.CharField(max_length=255, verbose_name=u'Заголовок')
-    text = models.TextField(verbose_name=u'Текст')
-    is_published = models.BooleanField(default=False, verbose_name=u'Опубликована')
-    author = models.ForeignKey('Author')
-
-    object = ArticleManager()
-
-    class Meta:
-        verbose_name = u'Статья'
-        verbose_name_plural = u'Статьи'
-
-    def __unicode__(self):
-        return self.title
-
-
-class Author(models.Model):
-    name = models.CharField(max_length=255, verbose_name=u'Имя')
-    birthday = models.DateField(null=False, blank=False, verbose_name=u'Дата рождения')
-
-    class Meta:
-        verbose_name = u'Автор'
-        verbose_name_plural = u'Авторы'
-
-    def __unicode__(self):
-        return self.name
-'''
-
-
-class ProfileManager(models.Manager):
-    def _test(self):
-        pass
-
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE,)
     about = models.TextField(verbose_name=u'About', blank=True, null=True)
     # avatar = models.ImageField(blank=True, null=True)
-
-    objects = ProfileManager()
 
     class Meta:
         verbose_name = u'Profile'
@@ -66,15 +23,8 @@ class Profile(models.Model):
         return unicode(self.user)
 
 
-class TagManager(models.Manager):
-    def _test(self):
-        pass
-
-
 class Tag(models.Model):
     name = models.CharField(verbose_name=u'Tag', max_length=255,  unique=True)
-
-    objects = TagManager()
 
     class Meta:
         verbose_name = u'Tag'
@@ -85,10 +35,6 @@ class Tag(models.Model):
 
 
 class QuestionManager(models.Manager):
-    def get_by_id(self, question_id):
-        # a = Answer.objects.filter(question=q_id)
-        return self.get(id=question_id)
-
     def get_by_tag(self, tag_name):
         return self.filter(tags__name=tag_name)
 
@@ -109,7 +55,6 @@ class Question(models.Model):
         blank=True,
         null=True,
     )
-    votes = models.IntegerField(default=0)
     tags = models.ManyToManyField(Tag,)
 
     objects = QuestionManager()
@@ -120,6 +65,29 @@ class Question(models.Model):
 
     def __unicode__(self):
         return self.title
+
+
+class QuestionVote(models.Model):
+    question = models.ForeignKey(
+        Question,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+
+    class Meta:
+        verbose_name = u'QuestionVote'
+        verbose_name_plural = u'QuestionVotes'
+        unique_together = ('question', 'user',)
+
+    def __unicode__(self):
+        return unicode(self.user)
 
 
 class AnswerManager(models.Manager):
@@ -142,7 +110,6 @@ class Answer(models.Model):
         blank=True,
         null=True,
     )
-    votes = models.IntegerField()
 
     objects = AnswerManager()
 
@@ -156,3 +123,27 @@ class Answer(models.Model):
 
     def __unicode__(self):
         return self.text
+
+
+class AnswerVote(models.Model):
+    answer = models.ForeignKey(
+        Answer,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+
+    class Meta:
+        verbose_name = u'AnswerVote'
+        verbose_name_plural = u'AnswerVotes'
+        unique_together = ('answer', 'user',)
+
+    def __unicode__(self):
+        return unicode(self.user)
+

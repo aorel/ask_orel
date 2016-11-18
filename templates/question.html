@@ -22,7 +22,12 @@
                         <p>December {{ answer.date }} <a href="#">{{ answer.user }}</a>
                     </div>
                     <div class="col-md-6 text-right">
-                        <a href="#">Rank <span class="badge askme-badge">{{ answer.votes }}</span></a>
+                        <a href="#">Votes <span class="badge askme-badge">{{ answer.answervote_set.all|length }}</span></a>
+                        <p>
+                            {% for answervote in answer.answervote_set.all %}
+                                {{ answervote.user }}
+                            {% endfor %}
+                        </p>
                         <button type="button" class="btn btn-default btn-xs">
                             <span class="glyphicon glyphicon-triangle-top askme-icon" aria-hidden="true"></span>
                         </button>
