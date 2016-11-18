@@ -5,7 +5,8 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, Http404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from models import Question
+from models import Question, QuestionVote
+# from forms import TestAskForm
 
 import datetime
 import random
@@ -128,4 +129,5 @@ def signup(request):
 
 
 def ask(request):
+    # context['test_form'] = TestAskForm
     return render(request, 'ask.html', context)

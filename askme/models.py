@@ -42,7 +42,7 @@ class QuestionManager(models.Manager):
         return self.order_by('-date')
 
     def best(self):
-        return self.order_by('-votes')
+        return self.annotate(num_votes=models.Count('questionvote')).order_by('-num_votes')[:5]
 
 
 class Question(models.Model):
