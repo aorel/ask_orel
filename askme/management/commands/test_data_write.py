@@ -7,13 +7,13 @@ my_tags = ['html', 'css', 'javascript', 'django', 'flask', 'cpp', 'python', 'go'
 my_users = ['Pupkin', 'John Doe', 'Batman', 'Homer', 'Bender', 'Yoda']
 
 test_tags = []
-for i in my_tags:
-    tag_name = '_{0}'.format(i)
+for my_tag in my_tags:
+    tag_name = '_{0}'.format(my_tag)
     test_tags.append(tag_name)
 
 test_users = []
-for i in my_users:
-    user_name = '_{0}'.format(i)
+for my_user in my_users:
+    user_name = '_{0}'.format(my_user)
     test_users.append(user_name)
 
 

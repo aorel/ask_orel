@@ -1,12 +1,16 @@
-from django.shortcuts import render, get_object_or_404
+# -*- coding: utf-8 -*-
+
+from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
 
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 
-from models import Question, QuestionVote
-# from forms import TestAskForm
+from models import Question
+from forms import LoginForm, SignupForm, ProfileForm, AskForm, AnswerForm
 
 import datetime
 import random
@@ -104,14 +108,8 @@ def tag(request, tag_name, page=1):
 def question(request, question_id):
     question_by_id = get_object_or_404(Question, pk=question_id)
     context['question'] = question_by_id
+    context['form'] = AnswerForm
     return render(request, 'question.html', context)
-
-    '''try:
-        question_by_id = Question.objects.get(id=question_id)
-        context['question'] = question_by_id
-        return render(request, 'question.html', context)
-    except Question.DoesNotExist:
-        raise Http404("No Question matches the given query.")'''
 
 
 def questions(request, page=1):
@@ -121,13 +119,74 @@ def questions(request, page=1):
 
 
 def login(request):
-    return render(request, 'login.html')
+    next_page = request.GET.get('next')
+    print 'login next_page: ' + str(next_page)
+
+    if request.POST:
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            auth.login(request, form.user_cache)
+
+            if next_page:
+                return redirect(next_page)
+            return redirect("/")
+        else:
+            pass
+
+        '''username = request.POST['username']
+        password = request.POST['password']
+        user = auth.authenticate(username=username, password=password)
+        if user is not None:
+            auth.login(request, user)
+            return redirect("/")'''
+    else:
+        form = LoginForm
+    context['form'] = form
+    return render(request, 'login.html', context)
+
+
+def logout(request):
+    next_page = request.GET.get('next')
+    print 'logout next_page: ' + str(next_page)
+
+    auth.logout(request)
+    if next_page:
+        return redirect(next_page)
+    return redirect("/")
 
 
 def signup(request):
-    return render(request, 'signup.html')
+    if request.POST:
+        form = SignupForm(request.POST)
+        # form = auth.forms.UserCreationForm(request.POST)
+        if form.is_valid():
+            print 'ok'
+            form.save()
+            user = auth.authenticate(
+                username=form.cleaned_data['username'],
+                password=form.cleaned_data['password'],
+            )
+            auth.login(request, user)
+            return redirect("/")
+        else:
+            print 'error'
+            pass
+    else:
+        form = SignupForm
+    context['form'] = form
+    return render(request, 'signup.html', context)
 
 
+@login_required
+def profile(request):
+    context['form'] = ProfileForm(initial={
+        'username': request.user.username,
+        'email': request.user.email
+    })
+    return render(request, 'profile.html', context)
+
+
+@login_required
 def ask(request):
-    # context['test_form'] = TestAskForm
+    context['form'] = AskForm
     return render(request, 'ask.html', context)

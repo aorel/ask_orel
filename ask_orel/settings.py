@@ -51,6 +51,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'ask_orel.urls'
+LOGIN_URL = '/login/'
 
 TEMPLATES = [
     {

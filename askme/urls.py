@@ -21,7 +21,11 @@ urlpatterns = [
     url(r'^questions/(?P<page>[0-9]+)/$', views.questions,  name='questions_page'),
 
     url(r'^login/$', views.login, name='login'),
+    url(r'^logout/$', views.logout, name='logout'),
     url(r'^signup/$', views.signup, name='signup'),
+    url(r'^profile/$', views.profile, name='profile'),
+
+
     url(r'^ask/$', views.ask, name='ask'),
 
     url(r'^$', views.questions, name='home'),

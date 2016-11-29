@@ -7,30 +7,30 @@
             <a href="/question/{{ question.id }}"><h4 class="media-heading">{{ question.title }}</h4></a>
 
             {% if show_body %}
-            <div class="question-body">
-                {{ question.text }}
-            </div>
+                <div class="question-body">
+                    {{ question.text }}
+                </div>
             {% endif %}
 
             <div class="askme-meta">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-7">
                         <p>{{ question.date }} <a href="#">{{ question.user }}</a>
                     </div>
-                    <div class="col-md-6 text-right">
+                    <div class="col-md-5 text-right">
                         <a href="/question/{{ question.id }}">Answers <span class="badge askme-badge">{{ question.answer_set.all|length }}</span></a> |
                         <a href="/question/{{ question.id }}">Votes <span class="badge askme-badge">{{ question.questionvote_set.all|length }}</span></a>
-                        <p>
-                            {% for questionvote in question.questionvote_set.all %}
-                                {{ questionvote.user }}
-                            {% endfor %}
-                        </p>
                         <button type="button" class="btn btn-default btn-xs">
                                 <span class="glyphicon glyphicon-triangle-top askme-icon" aria-hidden="true"></span>
                         </button>
                         <button type="button" class="btn btn-default btn-xs">
                                 <span class="glyphicon glyphicon-triangle-bottom askme-icon" aria-hidden="true"></span>
                         </button>
+                        <p>
+                            {% for questionvote in question.questionvote_set.all %}
+                                {{ questionvote.user }}
+                            {% endfor %}
+                        </p>
                     </div>
                 </div>
             </div>

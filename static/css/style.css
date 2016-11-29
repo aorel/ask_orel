@@ -52,7 +52,7 @@
 }
 
 .askme-textarea {
-    max-width: 100%;
+    resize: vertical;
 }
 
 .askme-icon {
@@ -67,21 +67,14 @@
 }
 
 
-.askme-badge{
+.askme-badge, .askme-label{
   background-color: #ccc;
 }
-.askme-badge:hover{
-  background-color: #999;
-}
-.askme-label{
-  background-color: #ccc;
-}
-.askme-label:hover{
+.askme-badge:hover, .askme-label:hover{
   background-color: #999;
 }
 
 .askme-pagination {
-    /*color: #aaa;*/
     margin-bottom: 50px;
 }
 

@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from askme.models import User, Profile, Tag, Question
 
+
 class Command(BaseCommand):
 
     def handle(self, *args, **options):

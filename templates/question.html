@@ -18,22 +18,27 @@
             </div>
             <div class="askme-meta">
                 <div class="row">
-                    <div class="col-md-6">
-                        <p>December {{ answer.date }} <a href="#">{{ answer.user }}</a>
+                    <div class="col-md-7">
+                        <p>{{ answer.date }} <a href="#">{{ answer.user }}</a>
                     </div>
-                    <div class="col-md-6 text-right">
+                    <div class="col-md-5 text-right">
+
+                        {% if answer.correct %}
+                            <span class="label label-default askme-label">Correct</span>
+                        {% endif %}
+
                         <a href="#">Votes <span class="badge askme-badge">{{ answer.answervote_set.all|length }}</span></a>
-                        <p>
-                            {% for answervote in answer.answervote_set.all %}
-                                {{ answervote.user }}
-                            {% endfor %}
-                        </p>
                         <button type="button" class="btn btn-default btn-xs">
                             <span class="glyphicon glyphicon-triangle-top askme-icon" aria-hidden="true"></span>
                         </button>
                         <button type="button" class="btn btn-default btn-xs">
                             <span class="glyphicon glyphicon-triangle-bottom askme-icon" aria-hidden="true"></span>
                         </button>
+                        <p>
+                            {% for answervote in answer.answervote_set.all %}
+                                {{ answervote.user }}
+                            {% endfor %}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -41,6 +46,22 @@
     </div>
 </div>
 {% endfor %}
+
+{% if user.is_authenticated %}
+<div class="answer">
+    <div class="media">
+        <div class="media-left">
+            <img src="/static/img/batman.jpg" class="media-object img-thumbnail question-avatar">
+        </div>
+        <div class="media-body">
+            <div class="panel-body answer-panel">
+
+                {% include "_inc_form_answer.html" with button_name='Answer' %}
+
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="answer">
     <div class="media">
@@ -62,5 +83,6 @@
         </div>
     </div>
 </div>
+{% endif %}
 
 {% endblock %}

@@ -110,6 +110,7 @@ class Answer(models.Model):
         blank=True,
         null=True,
     )
+    correct = models.BooleanField(verbose_name=u'Correct', default=False)
 
     objects = AnswerManager()
 
