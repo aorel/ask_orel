@@ -1,5 +1,6 @@
 ignore/
 .idea/
+uploads/
 */migrations/*
 *.pyc
 *.sqlite3

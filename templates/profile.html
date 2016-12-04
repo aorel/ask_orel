@@ -8,7 +8,11 @@
     <div class="panel-heading">Profile</div>
     <div class="panel-body">
 
-        {% include "_inc_form_default.html" with button_name='Save' %}
+        {% with user.profile as profile %}
+            {% include "_inc_avatar_media.html" %}
+        {% endwith %}
+
+        {% include "_inc_forms_profile.html" with button_name='Save' %}
 
     </div>
 </div>

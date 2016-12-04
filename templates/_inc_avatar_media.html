@@ -1,0 +1,6 @@
+{% load static %}
+{% if profile.avatar %}
+    <img src="{{ profile.avatar.url }}" class="media-object img-thumbnail question-avatar">
+{% else %}
+    <img src="{% static 'img/no_avatar.svg' %}" class="media-object img-thumbnail question-avatar">
+{% endif %}

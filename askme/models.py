@@ -10,10 +10,20 @@ from django.utils import timezone
 from django.template.defaultfilters import truncatechars
 
 
+def user_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    return 'user_{0}/{1}'.format(instance.user.id, filename)
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE,)
-    about = models.TextField(verbose_name=u'About', blank=True, null=True)
-    # avatar = models.ImageField(blank=True, null=True)
+    about = models.TextField(verbose_name=u'About', blank=True, null=True,)
+    avatar = models.ImageField(blank=True, null=True,
+                               upload_to=user_directory_path,
+                               height_field="avatar_height",
+                               width_field="avatar_width",)
+    avatar_height = models.IntegerField(blank=True, null=True,)
+    avatar_width = models.IntegerField(blank=True, null=True,)
 
     class Meta:
         verbose_name = u'Profile'
@@ -44,6 +54,13 @@ class QuestionManager(models.Manager):
     def best(self):
         return self.annotate(num_votes=models.Count('questionvote')).order_by('-num_votes')[:5]
 
+    def like(self, q_id, u_id):
+        question1 = self.filter(id=q_id)
+        question2 = self.filter(id=q_id).filter(user=u_id)
+        print question1
+        print question2
+        return self.filter(id=q_id)
+
 
 class Question(models.Model):
     title = models.CharField(verbose_name=u'Title', max_length=255,)
@@ -56,6 +73,7 @@ class Question(models.Model):
         null=True,
     )
     tags = models.ManyToManyField(Tag,)
+    # sum
 
     objects = QuestionManager()
 
@@ -80,6 +98,18 @@ class QuestionVote(models.Model):
         blank=True,
         null=True,
     )
+    VOTE_LIKE = 1
+    VOTE_NEUTRAL = 0
+    VOTE_DISLIKE = -1
+    VOTE_CHOICES = (
+        (VOTE_LIKE, 'Like'),
+        (VOTE_NEUTRAL, 'Neutral'),
+        (VOTE_DISLIKE, 'Dislike'),
+    )
+    vote = models.IntegerField(
+        default=VOTE_NEUTRAL,
+        choices=VOTE_CHOICES,
+    )
 
     class Meta:
         verbose_name = u'QuestionVote'
@@ -89,10 +119,11 @@ class QuestionVote(models.Model):
     def __unicode__(self):
         return unicode(self.user)
 
-
+'''
 class AnswerManager(models.Manager):
     def get_by_id(self, q_id):
         return self.filter(question=q_id)
+'''
 
 
 class Answer(models.Model):
@@ -112,7 +143,7 @@ class Answer(models.Model):
     )
     correct = models.BooleanField(verbose_name=u'Correct', default=False)
 
-    objects = AnswerManager()
+    # objects = AnswerManager()
 
     @property
     def custom_admin_display(self):
@@ -138,6 +169,18 @@ class AnswerVote(models.Model):
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
+    )
+    VOTE_LIKE = 1
+    VOTE_NEUTRAL = 0
+    VOTE_DISLIKE = -1
+    VOTE_CHOICES = (
+        (VOTE_LIKE, 'Like'),
+        (VOTE_NEUTRAL, 'Neutral'),
+        (VOTE_DISLIKE, 'Dislike'),
+    )
+    vote = models.IntegerField(
+        default=VOTE_NEUTRAL,
+        choices=VOTE_CHOICES,
     )
 
     class Meta:

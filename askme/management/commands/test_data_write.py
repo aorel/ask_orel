@@ -54,9 +54,10 @@ class Command(BaseCommand):
                     username=test_user,
                     first_name='test_first_name',
                     last_name='test_last_name',
-                    email='test_email',
-                    password='test',
+                    email='test@test.test',
+                    # password='test',
                 )
+                user.set_password('test')
                 user.save()
 
                 profile = Profile(
@@ -89,6 +90,7 @@ class Command(BaseCommand):
                     question_vote, created = QuestionVote.objects.get_or_create(
                         question=question,
                         user=random_answer_user,
+                        vote=4,
                     )
                     # if created is True:
                     #    print 'question vote added'

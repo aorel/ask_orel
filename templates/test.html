@@ -2,12 +2,14 @@
 
 {% block title %}Test{% endblock %}
 
+{% load static %}
+
 {% block content %}
 
 <div class="question">
     <div class="media">
         <div class="media-left">
-            <img src="/static/img/batman.jpg" class="media-object img-thumbnail question-avatar">
+            <img src="{% static 'img/batman.jpg' %}" class="media-object img-thumbnail question-avatar">
         </div>
         <div class="media-body">
             <a href="#"><h4 class="media-heading">What is Lorem Ipsum?</h4></a>
@@ -41,7 +43,7 @@
 <div class="question">
     <div class="media">
         <div class="media-left">
-            <img src="/static/img/bart.jpg" class="media-object img-thumbnail question-avatar">
+            <img src="{% static 'img/bart.jpg' %}" class="media-object img-thumbnail question-avatar">
         </div>
         <div class="media-body">
             <a href="#"><h4 class="media-heading">Where does it come from?</h4></a>
@@ -74,7 +76,7 @@
 <div class="question">
     <div class="media">
         <div class="media-left">
-            <img src="/static/img/hdr.jpg" class="media-object img-thumbnail question-avatar">
+            <img src="{% static 'img/hdr.jpg' %}" class="media-object img-thumbnail question-avatar">
         </div>
         <div class="media-body">
             <a href="#"><h4 class="media-heading">Why do we use it?</h4></a>
@@ -107,7 +109,7 @@
 <div class="question">
     <div class="media">
         <div class="media-left">
-            <img src="/static/img/homer.jpg" class="media-object img-thumbnail question-avatar">
+            <img src="{% static 'img/homer.jpg' %}" class="media-object img-thumbnail question-avatar">
         </div>
         <div class="media-body">
             <a href="#"><h4 class="media-heading">Where can I get some?</h4></a>
@@ -140,7 +142,7 @@
 <div class="question">
     <div class="media">
         <div class="media-left">
-            <img src="/static/img/starwars.jpg" class="media-object img-thumbnail question-avatar">
+            <img src="{% static 'img/starwars.jpg' %}" class="media-object img-thumbnail question-avatar">
         </div>
         <div class="media-body">
             <a href="#"><h4 class="media-heading">What is Lorem Ipsum?</h4></a>

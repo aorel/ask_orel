@@ -3,14 +3,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
-
+from django.urls import reverse
 from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 
 from models import Question
-from forms import LoginForm, SignupForm, ProfileForm, AskForm, AnswerForm
+from forms import LoginForm, SignupForm, ProfileUserForm, ProfileExtraForm, QuestionForm, AnswerForm
 
 import datetime
 import random
@@ -106,9 +106,20 @@ def tag(request, tag_name, page=1):
 
 
 def question(request, question_id):
-    question_by_id = get_object_or_404(Question, pk=question_id)
-    context['question'] = question_by_id
-    context['form'] = AnswerForm
+    if request.POST:
+        form = AnswerForm(request.user, question_id, request.POST)
+        if form.is_valid():
+            print "question POST valid"
+            form.save()
+            return redirect(reverse('question', kwargs={'question_id': question_id}))
+    else:
+        # TODO like
+        # Question.objects.like(question_id, request.user.id)
+
+        question_by_id = get_object_or_404(Question, pk=question_id)
+        context['question'] = question_by_id
+        form = AnswerForm(request.user, question_id)
+    context['form'] = form
     return render(request, 'question.html', context)
 
 
@@ -179,14 +190,60 @@ def signup(request):
 
 @login_required
 def profile(request):
-    context['form'] = ProfileForm(initial={
+    if request.method == 'POST':
+        form_user = ProfileUserForm(request.user, request.POST)
+        form_extra = ProfileExtraForm(request.user, request.POST, request.FILES)
+
+        print "is_multipart: " + str(form_extra.is_multipart())
+
+        if form_user.is_valid() and form_extra.is_valid():
+            form_user.save()
+            form_extra.save()
+            auth.update_session_auth_hash(request, request.user)
+            return redirect(reverse('profile'))
+    else:
+        form_user = ProfileUserForm(
+            request.user,
+            initial={
+                'username': request.user.username,
+                'email': request.user.email
+            }
+        )
+        form_extra = ProfileExtraForm(
+            request.user,
+            initial={
+                'about': request.user.profile.about,
+                'avatar': request.user.profile.avatar,
+            }
+        )
+
+    '''
+    user = User.objects.get(username = username)
+    user.username = newusername
+    user.save()
+    '''
+
+    '''context['form_profile_user'] = ProfileUserForm(initial={
         'username': request.user.username,
         'email': request.user.email
     })
+    context['form_profile_extra'] = ProfileExtraForm(initial={
+        'about': request.user.profile.about,
+    })'''
+
+    context['forms'] = (form_user, form_extra, )
+    context['enctype'] = True
     return render(request, 'profile.html', context)
 
 
 @login_required
 def ask(request):
-    context['form'] = AskForm
+    if request.POST:
+        form = QuestionForm(request.user, request.POST)
+        if form.is_valid():
+            question_id = form.save()
+            return redirect(reverse('question', kwargs={'question_id': question_id}))
+    else:
+        form = QuestionForm(request.user)
+    context['form'] = form
     return render(request, 'ask.html', context)

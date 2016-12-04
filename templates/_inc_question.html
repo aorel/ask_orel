@@ -1,7 +1,9 @@
 <div class="question">
     <div class="media">
         <div class="media-left">
-            <img src="/static/img/batman.jpg" class="media-object img-thumbnail question-avatar">
+            {% with question.user.profile as profile %}
+                {% include "_inc_avatar_media.html" %}
+            {% endwith %}
         </div>
         <div class="media-body">
             <a href="/question/{{ question.id }}"><h4 class="media-heading">{{ question.title }}</h4></a>
@@ -28,7 +30,7 @@
                         </button>
                         <p>
                             {% for questionvote in question.questionvote_set.all %}
-                                {{ questionvote.user }}
+                                {{ questionvote.user }}({{ questionvote.vote }})
                             {% endfor %}
                         </p>
                     </div>
