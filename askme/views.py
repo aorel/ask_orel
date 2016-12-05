@@ -111,11 +111,10 @@ def question(request, question_id):
         if form.is_valid():
             print "question POST valid"
             form.save()
-            return redirect(reverse('question', kwargs={'question_id': question_id}))
+            return redirect(reverse('question', kwargs={'question_id': question_id}) + '#id_text')
     else:
         # TODO like
         # Question.objects.like(question_id, request.user.id)
-
         question_by_id = get_object_or_404(Question, pk=question_id)
         context['question'] = question_by_id
         form = AnswerForm(request.user, question_id)
@@ -232,7 +231,6 @@ def profile(request):
     })'''
 
     context['forms'] = (form_user, form_extra, )
-    context['enctype'] = True
     return render(request, 'profile.html', context)
 
 
@@ -241,7 +239,7 @@ def ask(request):
     if request.POST:
         form = QuestionForm(request.user, request.POST)
         if form.is_valid():
-            question_id = form.save()
+            question_id, answer_id = form.save()
             return redirect(reverse('question', kwargs={'question_id': question_id}))
     else:
         form = QuestionForm(request.user)

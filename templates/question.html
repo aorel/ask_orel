@@ -36,6 +36,11 @@
                         <button type="button" class="btn btn-default btn-xs">
                             <span class="glyphicon glyphicon-triangle-bottom askme-icon" aria-hidden="true"></span>
                         </button>
+                        {% if user == question.user %}
+                            <button type="button" class="btn btn-default btn-xs">
+                                <a href="correct"><span class="glyphicon glyphicon-ok askme-icon" aria-hidden="true"></span></a>
+                            </button>
+                        {% endif %}
                         <p>
                             {% for answervote in answer.answervote_set.all %}
                                 {{ answervote.user }}({{ answervote.vote }})

@@ -194,7 +194,7 @@ class ProfileExtraForm(forms.ModelForm):
         self.current_user = current_user
 
     def save(self, commit=True):
-        #profile = super(SignupForm, self).save(commit=False)
+        # profile = super(ProfileExtraForm, self).save(commit=False)
 
         about = self.cleaned_data["about"]
         avatar = self.cleaned_data["avatar"]
