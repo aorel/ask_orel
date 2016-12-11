@@ -4,45 +4,12 @@
 
 {% block content %}
 
-
 <div class="panel panel-default askme-panel">
     <div class="panel-heading">New question</div>
     <div class="panel-body">
 
         {% include "_inc_form_default.html" with button_name='Ask' %}
 
-    </div>
-</div>
-
-<div class="panel panel-default askme-panel">
-    <div class="panel-heading">New question</div>
-    <div class="panel-body">
-        <form class="form-horizontal">
-            <div class="form-group">
-                <label class="control-label col-sm-2" for="new-question-title">Title:</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="new-question-title" placeholder="enter question title" maxlength="128">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-sm-2" for="new-question-text">Text:</label>
-                <div class="col-sm-10">
-                    <textarea class="form-control askme-textarea" rows="5" id="new-question-text" placeholder ="enter question text" maxlength="512"></textarea>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-sm-2" for="new-askme-tags">Tags:</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="new-askme-tags" placeholder ="enter comma separated tags: tag1, tag2, ..." maxlength="128">
-                </div>
-            </div>
-            <div class="alert alert-danger" role="alert">Sorry, you should fill all fields!</div>
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <button type="submit" class="btn btn-default">Ask!</button>
-                </div>
-            </div>
-        </form>
     </div>
 </div>
 

@@ -7,51 +7,7 @@
 {% include "_inc_question.html" with show_body=True %}
 
 {% for answer in question.answer_set.all %}
-<div class="answer">
-    <div class="media">
-        <div class="media-left">
-            {% with answer.user.profile as profile %}
-                {% include "_inc_avatar_media.html" %}
-            {% endwith %}
-        </div>
-        <div class="media-body">
-            <div class="answer-body">
-                {{ answer.text }}
-            </div>
-            <div class="askme-meta">
-                <div class="row">
-                    <div class="col-md-7">
-                        <p>{{ answer.date }} <a href="#">{{ answer.user }}</a>
-                    </div>
-                    <div class="col-md-5 text-right">
-
-                        {% if answer.correct %}
-                            <span class="label label-default askme-label">Correct</span>
-                        {% endif %}
-
-                        <a href="#">Votes <span class="badge askme-badge">{{ answer.answervote_set.all|length }}</span></a>
-                        <button type="button" class="btn btn-default btn-xs">
-                            <span class="glyphicon glyphicon-triangle-top askme-icon" aria-hidden="true"></span>
-                        </button>
-                        <button type="button" class="btn btn-default btn-xs">
-                            <span class="glyphicon glyphicon-triangle-bottom askme-icon" aria-hidden="true"></span>
-                        </button>
-                        {% if user == question.user %}
-                            <button type="button" class="btn btn-default btn-xs">
-                                <a href="correct"><span class="glyphicon glyphicon-ok askme-icon" aria-hidden="true"></span></a>
-                            </button>
-                        {% endif %}
-                        <p>
-                            {% for answervote in answer.answervote_set.all %}
-                                {{ answervote.user }}({{ answervote.vote }})
-                            {% endfor %}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+    {% include "_inc_answer.html" %}
 {% endfor %}
 
 {% if user.is_authenticated %}

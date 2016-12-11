@@ -1,0 +1,46 @@
+<div class="answer">
+    <div class="media">
+        <div class="media-left">
+            {% with answer.user.profile as profile %}
+                {% include "_inc_avatar_media.html" %}
+            {% endwith %}
+        </div>
+        <div class="media-body">
+            <div class="answer-body">
+                {{ answer.text }}
+            </div>
+            <div class="askme-meta">
+                <div class="row">
+                    <div class="col-md-7">
+                        <p>{{ answer.date }} <a href="#">{{ answer.user }}</a>
+                    </div>
+                    <div class="col-md-5 text-right">
+
+                        {% if answer.correct %}
+                            <span class="label label-default askme-label">Correct</span>
+                        {% endif %}
+
+                        <a href="#">Votes <span class="badge askme-badge">{{ answer.vote_sum }}</span></a>
+                        <button type="button" class="btn btn-default btn-xs">
+                            <span class="glyphicon glyphicon-triangle-top askme-icon js-vote" data-id="{{ answer.id }}" data-type="answer-like" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-default btn-xs">
+                            <span class="glyphicon glyphicon-triangle-bottom askme-icon js-vote" data-id="{{ answer.id }}" data-type="answer-dislike" aria-hidden="true"></span>
+                        </button>
+                        {% if user == question.user %}
+                            <button type="button" class="btn btn-default btn-xs">
+                                <span class="glyphicon glyphicon-ok askme-icon js-correct" data-id="{{ answer.id }}" data-type="answer-correct" aria-hidden="true"></span>
+                            </button>
+                        {% endif %}
+                        <p>
+                            [{{ answer.vote_sum }}]
+                            {% for answervote in answer.answervote_set.all %}
+                                {{ answervote.user }}({{ answervote.vote }})
+                            {% endfor %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

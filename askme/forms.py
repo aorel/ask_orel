@@ -193,22 +193,11 @@ class ProfileExtraForm(forms.ModelForm):
         self.user_cache = None
         self.current_user = current_user
 
-    def save(self, commit=True):
-        # profile = super(ProfileExtraForm, self).save(commit=False)
-
-        about = self.cleaned_data["about"]
-        avatar = self.cleaned_data["avatar"]
-
+    def custom_save(self, commit=True):
+        new_profile = self.save(commit=False)
         profile = self.current_user.profile
-        if about:
-            profile.about = about
-
-        if avatar:
-            print "avatar"
-            profile.avatar = avatar
-        else:
-            print "NOT avatar"
-
+        profile.about = new_profile.about
+        profile.avatar = new_profile.avatar
         if commit:
             profile.save()
 
@@ -232,8 +221,8 @@ class QuestionForm(forms.ModelForm):
         })
         self.current_user = current_user
 
-    def save(self, commit=True):
-        question = super(QuestionForm, self).save(commit=False)
+    def custom_save(self, commit=True):
+        question = self.save(commit=False)
         question.user = self.current_user
         if commit:
             question.save()
@@ -262,10 +251,11 @@ class AnswerForm(forms.ModelForm):
         except Question.DoesNotExist:
             raise forms.ValidationError("Question does not exist")
 
-    def save(self, commit=True):
-        answer = super(AnswerForm, self).save(commit=False)
-        print answer
+    def custom_save(self, commit=True):
+        answer = self.save(commit=False)
         answer.user = self.current_user
         answer.question = self.question
         if commit:
             answer.save()
+        return answer.id
+

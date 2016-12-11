@@ -5,6 +5,7 @@
 {% block content %}
 
 {% if page %}
+    {% csrf_token %}
 
     {% for question in page %}
         {% include "_inc_question.html" %}
@@ -14,7 +15,7 @@
     {% include "_inc_paginator.html" with paginator_url=questions_url %}
 
 {% else %}
-    {% include "_inc_empty.html" %}
+    {% include "_inc_warning_empty.html" %}
 {% endif %}
 
 {% endblock %}

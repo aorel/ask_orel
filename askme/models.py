@@ -15,6 +15,42 @@ def user_directory_path(instance, filename):
     return 'user_{0}/{1}'.format(instance.user.id, filename)
 
 
+def add_vote(current_object, exist, new_choice, old_vote):
+    if exist is True:
+        if old_vote.vote == new_choice:
+            print "vote delete"
+            old_vote.delete()
+            if new_choice is True:
+                current_object.vote_sum -= 1
+                current_object.save()
+            elif new_choice is False:
+                current_object.vote_sum += 1
+                current_object.save()
+            else:
+                print "[ERROR] if/elif/ELSE"
+        else:
+            print "vote swap"
+            old_vote.vote = new_choice
+            old_vote.save()
+            if new_choice is True:
+                current_object.vote_sum += 2
+                current_object.save()
+            elif new_choice is False:
+                current_object.vote_sum -= 2
+                current_object.save()
+            else:
+                print "[ERROR] if/elif/ELSE"
+    else:
+        if new_choice is True:
+            current_object.vote_sum += 1
+            current_object.save()
+        elif new_choice is False:
+            current_object.vote_sum -= 1
+            current_object.save()
+        else:
+            print "[ERROR] if/elif/ELSE"
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE,)
     about = models.TextField(verbose_name=u'About', blank=True, null=True,)
@@ -54,12 +90,21 @@ class QuestionManager(models.Manager):
     def best(self):
         return self.annotate(num_votes=models.Count('questionvote')).order_by('-num_votes')[:5]
 
-    def like(self, q_id, u_id):
-        question1 = self.filter(id=q_id)
-        question2 = self.filter(id=q_id).filter(user=u_id)
-        print question1
-        print question2
-        return self.filter(id=q_id)
+    def vote(self, question_id, user, vote_choice):
+        question = self.get(pk=question_id)
+        vote = question.questionvote_set.filter(user=user)
+        if vote:
+            if len(vote) > 1:
+                print "[ERROR] QuestionManager.like(): len(vote) > 1"
+            add_vote(question, True, vote_choice, vote[0])
+        else:
+            print "vote new"
+            new_vote = QuestionVote.objects.create(
+                question=question,
+                user=user,
+                vote=vote_choice,
+            )
+            add_vote(question, False, vote_choice, False)
 
 
 class Question(models.Model):
@@ -73,7 +118,10 @@ class Question(models.Model):
         null=True,
     )
     tags = models.ManyToManyField(Tag,)
-    # sum
+    vote_sum = models.IntegerField(
+        default=0,
+        verbose_name=u'Vote sum',
+    )
 
     objects = QuestionManager()
 
@@ -82,7 +130,8 @@ class Question(models.Model):
         verbose_name_plural = u'Questions'
 
     def __unicode__(self):
-        return self.title
+        # return self.title
+        return self.title + " (" + unicode(self.user) + ")"
 
 
 class QuestionVote(models.Model):
@@ -94,22 +143,16 @@ class QuestionVote(models.Model):
     )
     user = models.ForeignKey(
         User,
-        on_delete=models.SET_NULL,
+        on_delete=models.DO_NOTHING,
         blank=True,
         null=True,
     )
-    VOTE_LIKE = 1
-    VOTE_NEUTRAL = 0
-    VOTE_DISLIKE = -1
     VOTE_CHOICES = (
-        (VOTE_LIKE, 'Like'),
-        (VOTE_NEUTRAL, 'Neutral'),
-        (VOTE_DISLIKE, 'Dislike'),
+        (None, "Neutral"),
+        (True, "Like"),
+        (False, "Dislike")
     )
-    vote = models.IntegerField(
-        default=VOTE_NEUTRAL,
-        choices=VOTE_CHOICES,
-    )
+    vote = models.NullBooleanField(choices=VOTE_CHOICES, verbose_name=u'Vote')
 
     class Meta:
         verbose_name = u'QuestionVote'
@@ -119,11 +162,41 @@ class QuestionVote(models.Model):
     def __unicode__(self):
         return unicode(self.user)
 
-'''
+
 class AnswerManager(models.Manager):
-    def get_by_id(self, q_id):
-        return self.filter(question=q_id)
-'''
+    def vote(self, answer_id, user, vote_choice):
+        answer = self.get(pk=answer_id)
+        vote = answer.answervote_set.filter(user=user)
+        if vote:
+            if len(vote) > 1:
+                print "[ERROR] QuestionManager.like(): len(vote) > 1"
+            add_vote(answer, True, vote_choice, vote[0])
+        else:
+            print "vote new"
+            new_vote = AnswerVote.objects.create(
+                answer=answer,
+                user=user,
+                vote=vote_choice,
+            )
+            add_vote(answer, False, vote_choice, False)
+
+    def correct(self, answer_id, user):
+        answer = self.get(pk=answer_id)
+        if answer.question.user == user:
+            question = answer.question
+            correct_answers = question.answer_set.filter(correct=True)
+            for correct_answer in correct_answers:
+                correct_answer.correct = False
+                correct_answer.save()
+
+            if answer.correct is True:
+                answer.correct = False
+                answer.save()
+            elif answer.correct is False:
+                answer.correct = True
+                answer.save()
+            else:
+                print "[ERROR] if/elif/ELSE"
 
 
 class Answer(models.Model):
@@ -141,20 +214,24 @@ class Answer(models.Model):
         blank=True,
         null=True,
     )
+    vote_sum = models.IntegerField(
+        default=0,
+        verbose_name=u'Vote sum',
+    )
     correct = models.BooleanField(verbose_name=u'Correct', default=False)
 
-    # objects = AnswerManager()
+    objects = AnswerManager()
 
     @property
-    def custom_admin_display(self):
-        return truncatechars(self.text, 50) + " (" + truncatechars(unicode(self.question), 50) + ')'
+    def some_text(self):
+        return truncatechars(self.text, 50)
 
     class Meta:
         verbose_name = u'Answer'
         verbose_name_plural = u'Answers'
 
     def __unicode__(self):
-        return self.text
+        return unicode(self.question) + " (" + unicode(self.user) + ")"
 
 
 class AnswerVote(models.Model):
@@ -166,22 +243,16 @@ class AnswerVote(models.Model):
     )
     user = models.ForeignKey(
         User,
-        on_delete=models.SET_NULL,
+        on_delete=models.DO_NOTHING,
         blank=True,
         null=True,
     )
-    VOTE_LIKE = 1
-    VOTE_NEUTRAL = 0
-    VOTE_DISLIKE = -1
     VOTE_CHOICES = (
-        (VOTE_LIKE, 'Like'),
-        (VOTE_NEUTRAL, 'Neutral'),
-        (VOTE_DISLIKE, 'Dislike'),
+        (None, "Neutral"),
+        (True, "Like"),
+        (False, "Dislike")
     )
-    vote = models.IntegerField(
-        default=VOTE_NEUTRAL,
-        choices=VOTE_CHOICES,
-    )
+    vote = models.NullBooleanField(choices=VOTE_CHOICES, verbose_name=u'Vote')
 
     class Meta:
         verbose_name = u'AnswerVote'

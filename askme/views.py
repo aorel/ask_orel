@@ -4,12 +4,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
 from django.urls import reverse
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 
-from models import Question
+from models import Question, Answer
 from forms import LoginForm, SignupForm, ProfileUserForm, ProfileExtraForm, QuestionForm, AnswerForm
 
 import datetime
@@ -27,10 +27,6 @@ def hello_world(request):
         '<p>' + request.path + '</p>'\
         '<p>' + request.method + ' ' + request.META['QUERY_STRING'] + '</p>'
     return HttpResponse(data)
-
-
-def test(request):
-    return render(request, 'test.html')
 
 
 # -----------------------------------------------------------------------------
@@ -110,11 +106,9 @@ def question(request, question_id):
         form = AnswerForm(request.user, question_id, request.POST)
         if form.is_valid():
             print "question POST valid"
-            form.save()
+            answer_id = form.custom_save()
             return redirect(reverse('question', kwargs={'question_id': question_id}) + '#id_text')
     else:
-        # TODO like
-        # Question.objects.like(question_id, request.user.id)
         question_by_id = get_object_or_404(Question, pk=question_id)
         context['question'] = question_by_id
         form = AnswerForm(request.user, question_id)
@@ -130,7 +124,8 @@ def questions(request, page=1):
 
 def login(request):
     next_page = request.GET.get('next')
-    print 'login next_page: ' + str(next_page)
+    if next_page:
+        print 'login next_page: ' + str(next_page)
 
     if request.POST:
         form = LoginForm(request.POST)
@@ -142,13 +137,6 @@ def login(request):
             return redirect("/")
         else:
             pass
-
-        '''username = request.POST['username']
-        password = request.POST['password']
-        user = auth.authenticate(username=username, password=password)
-        if user is not None:
-            auth.login(request, user)
-            return redirect("/")'''
     else:
         form = LoginForm
     context['form'] = form
@@ -168,7 +156,6 @@ def logout(request):
 def signup(request):
     if request.POST:
         form = SignupForm(request.POST)
-        # form = auth.forms.UserCreationForm(request.POST)
         if form.is_valid():
             print 'ok'
             form.save()
@@ -189,6 +176,9 @@ def signup(request):
 
 @login_required
 def profile(request):
+    if request.user.profile.avatar:
+        print request.user.profile.avatar.url
+
     if request.method == 'POST':
         form_user = ProfileUserForm(request.user, request.POST)
         form_extra = ProfileExtraForm(request.user, request.POST, request.FILES)
@@ -197,7 +187,7 @@ def profile(request):
 
         if form_user.is_valid() and form_extra.is_valid():
             form_user.save()
-            form_extra.save()
+            form_extra.custom_save()
             auth.update_session_auth_hash(request, request.user)
             return redirect(reverse('profile'))
     else:
@@ -215,21 +205,6 @@ def profile(request):
                 'avatar': request.user.profile.avatar,
             }
         )
-
-    '''
-    user = User.objects.get(username = username)
-    user.username = newusername
-    user.save()
-    '''
-
-    '''context['form_profile_user'] = ProfileUserForm(initial={
-        'username': request.user.username,
-        'email': request.user.email
-    })
-    context['form_profile_extra'] = ProfileExtraForm(initial={
-        'about': request.user.profile.about,
-    })'''
-
     context['forms'] = (form_user, form_extra, )
     return render(request, 'profile.html', context)
 
@@ -239,9 +214,45 @@ def ask(request):
     if request.POST:
         form = QuestionForm(request.user, request.POST)
         if form.is_valid():
-            question_id, answer_id = form.save()
+            question_id = form.custom_save()
             return redirect(reverse('question', kwargs={'question_id': question_id}))
     else:
         form = QuestionForm(request.user)
     context['form'] = form
     return render(request, 'ask.html', context)
+
+
+def vote(request):
+    if request.POST:
+        object_id = request.POST.get('id')
+        object_type = request.POST.get('type')
+        if object_id and object_type:
+            if object_type == "question-like":
+                Question.objects.vote(object_id, request.user, True)
+            elif object_type == "question-dislike":
+                Question.objects.vote(object_id, request.user, False)
+            elif object_type == "answer-like":
+                Answer.objects.vote(object_id, request.user, True)
+            elif object_type == "answer-dislike":
+                Answer.objects.vote(object_id, request.user, False)
+            else:
+                return JsonResponse({"status": "error: wrong type"})
+            return JsonResponse({"status": "ok"})
+        else:
+            return JsonResponse({"status": "error: empty id or type"})
+    return JsonResponse({"status": "error: something wrong"})
+
+
+def correct(request):
+    if request.POST:
+        object_id = request.POST.get('id')
+        object_type = request.POST.get('type')
+        if object_id and object_type:
+            if object_type == "answer-correct":
+                Answer.objects.correct(object_id, request.user)
+            else:
+                return JsonResponse({"status": "error: wrong type"})
+            return JsonResponse({"status": "ok"})
+        else:
+            return JsonResponse({"status": "error: empty id or type"})
+    return JsonResponse({"status": "error: something wrong"})

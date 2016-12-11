@@ -90,7 +90,7 @@ class Command(BaseCommand):
                     question_vote, created = QuestionVote.objects.get_or_create(
                         question=question,
                         user=random_answer_user,
-                        vote=4,
+                        vote=True,
                     )
                     # if created is True:
                     #    print 'question vote added'

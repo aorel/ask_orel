@@ -5,7 +5,6 @@ from askme import views
 urlpatterns = [
     url(r'^datetime/$', views.current_datetime),
     url(r'^helloworld/$', views.hello_world),
-    url(r'^test/$', views.test),
 
 
 
@@ -25,6 +24,8 @@ urlpatterns = [
     url(r'^signup/$', views.signup, name='signup'),
     url(r'^profile/$', views.profile, name='profile'),
 
+    url(r'^vote/$', views.vote, name='vote'),
+    url(r'^correct/$', views.correct, name='correct'),
 
     url(r'^ask/$', views.ask, name='ask'),
 
