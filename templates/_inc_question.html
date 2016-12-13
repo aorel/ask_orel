@@ -22,12 +22,14 @@
                     <div class="col-md-5 text-right">
                         <a href="/question/{{ question.id }}">Answers <span class="badge askme-badge">{{ question.answer_set.all|length }}</span></a> |
                         <a href="/question/{{ question.id }}">Votes <span class="badge askme-badge">{{ question.vote_sum }}</span></a>
-                        <button type="button" class="btn btn-default btn-xs">
+                        {% if user.is_authenticated %}
+                            <button type="button" class="btn btn-default btn-xs">
                                 <span class="glyphicon glyphicon-triangle-top askme-icon js-vote" data-id="{{ question.id }}" data-type="question-like" aria-hidden="true"></span>
-                        </button>
-                        <button type="button" class="btn btn-default btn-xs">
+                            </button>
+                            <button type="button" class="btn btn-default btn-xs">
                                 <span class="glyphicon glyphicon-triangle-bottom askme-icon js-vote" data-id="{{ question.id }}" data-type="question-dislike" aria-hidden="true"></span>
-                        </button>
+                            </button>
+                        {% endif %}
                         <p>
                             [{{ question.vote_sum }}]
                             {% for questionvote in question.questionvote_set.all %}
