@@ -226,7 +226,7 @@ class QuestionForm(forms.ModelForm):
         question.user = self.current_user
         if commit:
             question.save()
-        return question.id
+        return question
 
 
 class AnswerForm(forms.ModelForm):
@@ -257,5 +257,5 @@ class AnswerForm(forms.ModelForm):
         answer.question = self.question
         if commit:
             answer.save()
-        return answer.id
+        return answer
 

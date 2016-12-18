@@ -1,3 +1,5 @@
+{% load get_key %}
+
 <div class="answer">
     <div class="media">
         <div class="media-left">
@@ -20,14 +22,15 @@
                             <span class="label label-default askme-label">Correct</span>
                         {% endif %}
 
-                        <a href="#">Votes <span class="badge askme-badge">{{ answer.vote_sum }}</span></a>
+                        Votes <span class="badge askme-badge" data-id="{{ answer.id }}" data-type="answer-votes">{{ answer.vote_sum }}</span>
                         {% if user.is_authenticated %}
-                            <button type="button" class="btn btn-default btn-xs">
-                                <span class="glyphicon glyphicon-triangle-top askme-icon js-vote" data-id="{{ answer.id }}" data-type="answer-like" aria-hidden="true"></span>
-                            </button>
-                            <button type="button" class="btn btn-default btn-xs">
-                                <span class="glyphicon glyphicon-triangle-bottom askme-icon js-vote" data-id="{{ answer.id }}" data-type="answer-dislike" aria-hidden="true"></span>
-                            </button>
+                            {% if answer in user_answer_vote %}
+                                {% include "_inc_answer_vote.html" with vote=user_answer_vote|get_key:answer %}
+                            {% else %}
+                                {% include "_inc_answer_vote.html" %}
+                            {% endif %}
+
+
                             {% if user == question.user %}
                                 <button type="button" class="btn btn-default btn-xs">
                                     <span class="glyphicon glyphicon-ok askme-icon js-correct" data-id="{{ answer.id }}" data-type="answer-correct" aria-hidden="true"></span>

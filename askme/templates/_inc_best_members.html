@@ -1,0 +1,8 @@
+{% for member in test_best_members %}
+    {% if forloop.last %}
+        <a href="/tag/{{ member }}">{{ member }}</a>
+    {% else %}
+        <a href="/tag/{{ member }}">{{ member }}</a>,
+    {% endif %}
+{% endfor %}
+<p>-----</p>

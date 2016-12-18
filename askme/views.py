@@ -9,7 +9,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 
-from models import Question, Answer
+from models import Question, QuestionVote, Answer
 from forms import LoginForm, SignupForm, ProfileUserForm, ProfileExtraForm, QuestionForm, AnswerForm
 
 import datetime
@@ -85,6 +85,16 @@ def my_question_search(q_id):
     return filter(lambda qn: qn['id'] == q_id, questions_list)
 
 
+def user_vote_dict(v):
+    d = {}
+    if v:
+        d['like'] = 'askme-btn-like'
+        d['dislike'] = ''
+    else:
+        d['like'] = ''
+        d['dislike'] = 'askme-btn-dislike'
+    return d
+
 # -----------------------------------------------------------------------------
 
 
@@ -106,11 +116,31 @@ def question(request, question_id):
         form = AnswerForm(request.user, question_id, request.POST)
         if form.is_valid():
             print "question POST valid"
-            answer_id = form.custom_save()
+            new_answer = form.custom_save()
+            new_answer.notify()
             return redirect(reverse('question', kwargs={'question_id': question_id}) + '#id_text')
     else:
         question_by_id = get_object_or_404(Question, pk=question_id)
         context['question'] = question_by_id
+
+        if request.user.is_authenticated():
+            q = context['question']
+            _a = q.answer_set.all()
+
+            context['user_question_vote'] = {}
+            user_vote = q.questionvote_set.filter(user=request.user)
+            if user_vote:
+                if len(user_vote) > 1:
+                    print "ERROR in user_vote"
+                context['user_question_vote'][user_vote[0].question] = user_vote_dict(user_vote[0].vote)
+
+            context['user_answer_vote'] = {}
+            for a in _a:
+                user_vote = a.answervote_set.filter(user=request.user)
+                if user_vote:
+                    if len(user_vote) > 1:
+                        print "ERROR in user_vote"
+                    context['user_answer_vote'][user_vote[0].answer] = user_vote_dict(user_vote[0].vote)
         form = AnswerForm(request.user, question_id)
     context['form'] = form
     return render(request, 'question.html', context)
@@ -119,6 +149,17 @@ def question(request, question_id):
 def questions(request, page=1):
     new_questions = Question.objects.new()
     context['page'] = my_paginator(new_questions, page)
+
+    if request.user.is_authenticated():
+        _q = context['page']
+
+        context['user_question_vote'] = {}
+        for q in _q:
+            user_vote = q.questionvote_set.filter(user=request.user)
+            if user_vote:
+                if len(user_vote) > 1:
+                    print "ERROR in user_vote"
+                context['user_question_vote'][user_vote[0].question] = user_vote_dict(user_vote[0].vote)
     return render(request, 'questions.html', context)
 
 
@@ -214,8 +255,8 @@ def ask(request):
     if request.POST:
         form = QuestionForm(request.user, request.POST)
         if form.is_valid():
-            question_id = form.custom_save()
-            return redirect(reverse('question', kwargs={'question_id': question_id}))
+            new_question = form.custom_save()
+            return redirect(reverse('question', kwargs={'question_id': new_question}))
     else:
         form = QuestionForm(request.user)
     context['form'] = form
@@ -227,17 +268,24 @@ def vote(request):
         object_id = request.POST.get('id')
         object_type = request.POST.get('type')
         if object_id and object_type:
+            json_response = {}
             if object_type == "question-like":
-                Question.objects.vote(object_id, request.user, True)
+                json_response['action'] = Question.objects.vote(object_id, request.user, True)
+                json_response['action']['type'] = 'like'
             elif object_type == "question-dislike":
-                Question.objects.vote(object_id, request.user, False)
+                json_response['action'] = Question.objects.vote(object_id, request.user, False)
+                json_response['action']['type'] = 'dislike'
             elif object_type == "answer-like":
-                Answer.objects.vote(object_id, request.user, True)
+                json_response['action'] = Answer.objects.vote(object_id, request.user, True)
+                json_response['action']['type'] = 'like'
             elif object_type == "answer-dislike":
-                Answer.objects.vote(object_id, request.user, False)
+                json_response['action'] = Answer.objects.vote(object_id, request.user, False)
+                json_response['action']['type'] = 'dislike'
             else:
                 return JsonResponse({"status": "error: wrong type"})
-            return JsonResponse({"status": "ok"})
+
+            json_response['status'] = 'ok'
+            return JsonResponse(json_response)
         else:
             return JsonResponse({"status": "error: empty id or type"})
     return JsonResponse({"status": "error: something wrong"})

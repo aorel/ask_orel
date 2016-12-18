@@ -1,3 +1,5 @@
+{% load get_key %}
+
 <div class="question">
     <div class="media">
         <div class="media-left">
@@ -20,15 +22,14 @@
                         <p>{{ question.date }} <a href="#">{{ question.user }}</a>
                     </div>
                     <div class="col-md-5 text-right">
-                        <a href="/question/{{ question.id }}">Answers <span class="badge askme-badge">{{ question.answer_set.all|length }}</span></a> |
-                        <a href="/question/{{ question.id }}">Votes <span class="badge askme-badge">{{ question.vote_sum }}</span></a>
+                        Answers <span class="badge askme-badge" data-id="{{ question.id }}" data-type="question-answer">{{ question.answer_set.all|length }}</span> |
+                        Votes <span class="badge askme-badge" data-id="{{ question.id }}" data-type="question-votes">{{ question.vote_sum }}</span>
                         {% if user.is_authenticated %}
-                            <button type="button" class="btn btn-default btn-xs">
-                                <span class="glyphicon glyphicon-triangle-top askme-icon js-vote" data-id="{{ question.id }}" data-type="question-like" aria-hidden="true"></span>
-                            </button>
-                            <button type="button" class="btn btn-default btn-xs">
-                                <span class="glyphicon glyphicon-triangle-bottom askme-icon js-vote" data-id="{{ question.id }}" data-type="question-dislike" aria-hidden="true"></span>
-                            </button>
+                            {% if question in user_question_vote %}
+                                {% include "_inc_question_vote.html" with vote=user_question_vote|get_key:question %}
+                            {% else %}
+                                {% include "_inc_question_vote.html" %}
+                            {% endif %}
                         {% endif %}
                         <p>
                             [{{ question.vote_sum }}]

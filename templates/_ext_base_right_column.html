@@ -1,5 +1,8 @@
 {% extends "_ext_base.html" %}
 
+{% load popular_tags %}
+{% load best_members %}
+
 {% block title %}{% endblock %}
 
 {% block base_extension %}
@@ -13,6 +16,9 @@
         <div class="panel panel-default">
             <div class="panel-heading">Popular tags</div>
             <div class="panel-body">
+
+                {% popular_tags %}
+
                 {% for tag in popular_tags %}
                     {% if forloop.last %}
                         <a href="/tag/{{ tag }}">{{ tag }}</a>
@@ -26,6 +32,9 @@
         <div class="panel panel-default">
             <div class="panel-heading">Best members</div>
             <div class="panel-body">
+
+                {% best_members %}
+
                 {% for members in best_members %}
                     {% if forloop.last %}
                         <a href="#">{{ members }}</a>

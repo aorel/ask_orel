@@ -74,6 +74,13 @@
   background-color: #999;
 }
 
+.askme-btn-like, .askme-btn-like:focus{
+  background-color: #cec;
+}
+.askme-btn-dislike, .askme-btn-dislike:focus{
+  background-color: #ecc;
+}
+
 .askme-pagination {
     margin-bottom: 50px;
 }

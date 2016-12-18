@@ -22,9 +22,11 @@ def add_vote(current_object, exist, new_choice, old_vote):
             old_vote.delete()
             if new_choice is True:
                 current_object.vote_sum -= 1
+                change = -1
                 current_object.save()
             elif new_choice is False:
                 current_object.vote_sum += 1
+                change = 1
                 current_object.save()
             else:
                 print "[ERROR] if/elif/ELSE"
@@ -34,21 +36,29 @@ def add_vote(current_object, exist, new_choice, old_vote):
             old_vote.save()
             if new_choice is True:
                 current_object.vote_sum += 2
+                change = 2
                 current_object.save()
             elif new_choice is False:
                 current_object.vote_sum -= 2
+                change = -2
                 current_object.save()
             else:
                 print "[ERROR] if/elif/ELSE"
     else:
         if new_choice is True:
             current_object.vote_sum += 1
+            change = 1
             current_object.save()
         elif new_choice is False:
             current_object.vote_sum -= 1
+            change = -1
             current_object.save()
         else:
             print "[ERROR] if/elif/ELSE"
+    return {
+        'votes': current_object.vote_sum,
+        'change': change,
+    }
 
 
 class Profile(models.Model):
@@ -96,7 +106,7 @@ class QuestionManager(models.Manager):
         if vote:
             if len(vote) > 1:
                 print "[ERROR] QuestionManager.like(): len(vote) > 1"
-            add_vote(question, True, vote_choice, vote[0])
+            return_dict = add_vote(question, True, vote_choice, vote[0])
         else:
             print "vote new"
             new_vote = QuestionVote.objects.create(
@@ -104,7 +114,8 @@ class QuestionManager(models.Manager):
                 user=user,
                 vote=vote_choice,
             )
-            add_vote(question, False, vote_choice, False)
+            return_dict = add_vote(question, False, vote_choice, False)
+        return return_dict
 
 
 class Question(models.Model):
@@ -170,7 +181,7 @@ class AnswerManager(models.Manager):
         if vote:
             if len(vote) > 1:
                 print "[ERROR] QuestionManager.like(): len(vote) > 1"
-            add_vote(answer, True, vote_choice, vote[0])
+            return_dict = add_vote(answer, True, vote_choice, vote[0])
         else:
             print "vote new"
             new_vote = AnswerVote.objects.create(
@@ -178,7 +189,8 @@ class AnswerManager(models.Manager):
                 user=user,
                 vote=vote_choice,
             )
-            add_vote(answer, False, vote_choice, False)
+            return_dict = add_vote(answer, False, vote_choice, False)
+        return return_dict
 
     def correct(self, answer_id, user):
         answer = self.get(pk=answer_id)
@@ -219,6 +231,9 @@ class Answer(models.Model):
         verbose_name=u'Vote sum',
     )
     correct = models.BooleanField(verbose_name=u'Correct', default=False)
+
+    def notify(self):
+        pass
 
     objects = AnswerManager()
 
@@ -261,4 +276,3 @@ class AnswerVote(models.Model):
 
     def __unicode__(self):
         return unicode(self.user)
-

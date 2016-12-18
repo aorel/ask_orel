@@ -1,0 +1,8 @@
+{% for tag in test_popular_tags %}
+    {% if forloop.last %}
+        <a href="/tag/{{ tag }}">{{ tag }}</a>
+    {% else %}
+        <a href="/tag/{{ tag }}">{{ tag }}</a>,
+    {% endif %}
+{% endfor %}
+<p>-----</p>
