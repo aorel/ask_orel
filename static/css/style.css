@@ -14,6 +14,14 @@
     margin-top: -10px;
 }
 
+.askme-dropdown {
+    display: none;
+}
+.askme-dropdown-content {
+    display: block;
+    left: 146px;
+}
+
 .question {
     margin-bottom: 50px;
 }

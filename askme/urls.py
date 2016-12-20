@@ -29,5 +29,7 @@ urlpatterns = [
 
     url(r'^ask/$', views.ask, name='ask'),
 
+    url(r'^search/$', views.search, name='search'),
+
     url(r'^$', views.questions, name='home'),
 ]

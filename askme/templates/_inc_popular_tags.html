@@ -1,8 +1,12 @@
-{% for tag in test_popular_tags %}
-    {% if forloop.last %}
-        <a href="/tag/{{ tag }}">{{ tag }}</a>
-    {% else %}
-        <a href="/tag/{{ tag }}">{{ tag }}</a>,
-    {% endif %}
-{% endfor %}
+{% if test_popular_tags %}
+    {% for tag in test_popular_tags %}
+        {% if forloop.last %}
+            <a href="/tag/{{ tag }}">{{ tag.0 }}</a> ({{ tag.1 }})
+        {% else %}
+            <a href="/tag/{{ tag }}">{{ tag.0 }}</a> ({{ tag.1 }}),
+        {% endif %}
+    {% endfor %}
+{% else %}
+    {% include "_inc_warning_empty.html" %}
+{% endif %}
 <p>-----</p>

@@ -304,3 +304,21 @@ def correct(request):
         else:
             return JsonResponse({"status": "error: empty id or type"})
     return JsonResponse({"status": "error: something wrong"})
+
+
+def search(request):
+    if request.POST:
+        sub_string = request.POST.get('sub_string')
+        matching_tags = [s for s in popular_tags if sub_string in s]
+        matching_members = [s for s in best_members if sub_string in s]
+        matching = []
+        matching.extend(matching_tags)
+        matching.extend(matching_members)
+        print 'search: ' + str(sub_string)
+        print 'matching: ' + str(matching)
+        return JsonResponse({
+            "status": "ok",
+            "matching": matching,
+        })
+    else:
+        return redirect("/")

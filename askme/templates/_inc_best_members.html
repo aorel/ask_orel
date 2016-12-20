@@ -1,8 +1,12 @@
-{% for member in test_best_members %}
-    {% if forloop.last %}
-        <a href="/tag/{{ member }}">{{ member }}</a>
-    {% else %}
-        <a href="/tag/{{ member }}">{{ member }}</a>,
-    {% endif %}
-{% endfor %}
+{% if test_best_members %}
+    {% for member in test_best_members %}
+        {% if forloop.last %}
+            <a href="/tag/{{ member }}">{{ member.0 }}</a> ({{ member.1 }})
+        {% else %}
+            <a href="/tag/{{ member }}">{{ member.0 }}</a> ({{ member.1 }}),
+        {% endif %}
+    {% endfor %}
+{% else %}
+    {% include "_inc_warning_empty.html" %}
+{% endif %}
 <p>-----</p>

@@ -9,6 +9,11 @@ from django.utils import timezone
 
 from django.template.defaultfilters import truncatechars
 
+from django.contrib.staticfiles.templatetags.staticfiles import static
+
+import json
+import requests
+
 
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
@@ -233,7 +238,21 @@ class Answer(models.Model):
     correct = models.BooleanField(verbose_name=u'Correct', default=False)
 
     def notify(self):
-        pass
+        print 'notify'
+
+        if self.user.profile.avatar:
+            user_avatar = self.user.profile.avatar.url
+        else:
+            user_avatar = static('img/no_avatar.svg')
+        data = {
+            'id': self.pk,
+            'text': self.text,
+            'date': 'now',
+            'user': str(self.user),
+            'vote_sum': self.vote_sum,
+            'avatar': user_avatar,
+        }
+        requests.post('http://ask-orel.test/pub?id='+str(self.question.id), data=json.dumps(data))
 
     objects = AnswerManager()
 
